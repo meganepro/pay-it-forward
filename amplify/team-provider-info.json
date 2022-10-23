@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-payitforward-dev-155015-authRole",
+      "UnauthRoleArn": "arn:aws:iam::732340541630:role/amplify-payitforward-dev-155015-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::732340541630:role/amplify-payitforward-dev-155015-authRole",
+      "Region": "ap-northeast-1",
+      "DeploymentBucketName": "amplify-payitforward-dev-155015-deployment",
+      "UnauthRoleName": "amplify-payitforward-dev-155015-unauthRole",
+      "StackName": "amplify-payitforward-dev-155015",
+      "StackId": "arn:aws:cloudformation:ap-northeast-1:732340541630:stack/amplify-payitforward-dev-155015/f40f57b0-529e-11ed-b9b0-063dd24fd2e3",
+      "AmplifyAppId": "dlzxn8zgoov9y"
+    }
+  }
+}
