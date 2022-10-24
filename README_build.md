@@ -1,4 +1,4 @@
-# Initial Settings
+# Initial Settings(FE)
 
 ## next app
 
@@ -61,4 +61,19 @@ npm install @chakra-ui/react @emotion/react@^11 @emotion/styled@^11 framer-motio
 
 ```sh
 npx sb init
+```
+
+# Initial Settings(BE)
+
+## sls
+
+### initial
+```sh
+npx serverless create --template aws-nodejs-typescript
+npm install
+```
+
+### deploy 
+```sh
+npx serverless deploy --aws-profile=***
 ```
