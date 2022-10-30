@@ -46,7 +46,7 @@ pub contract PayItForward {
       self.id = id
       if(originalNft == nil){
         self.originalNftId = 0
-        self.numForMint = 99
+        self.numForMint = 10
       }else{
         self.originalNftId = originalNft!.id
         self.numForMint = 3

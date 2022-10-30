@@ -57,6 +57,26 @@ const DefaultLayout: FC<DefaultLayoutProps> = (props: DefaultLayoutProps) => {
       icon: FiCreditCard,
       linkTo: '/debug/deploy-contract',
     },
+    {
+      name: 'Debug(01_AgentInitialize)',
+      icon: FiCreditCard,
+      linkTo: '/debug/01_AgentInitialize',
+    },
+    {
+      name: 'Debug(02_AgentMintToSelf)',
+      icon: FiCreditCard,
+      linkTo: '/debug/02_AgentMintToSelf',
+    },
+    {
+      name: 'Debug(03_UserReceiveNFT)',
+      icon: FiCreditCard,
+      linkTo: '/debug/03_UserReceiveNFT',
+    },
+    {
+      name: 'Debug(06_Check)',
+      icon: FiCreditCard,
+      linkTo: '/debug/06_Check',
+    },
   ];
 
   return (
