@@ -45,6 +45,13 @@ npm install -D eslint-plugin-react @typescript-eslint/eslint-plugin \
 npm install -D prettier eslint-config-prettier
 # simple-git-hooks
 npm install -D simple-git-hooks
+# amplify
+npm install aws-amplify @aws-amplify/ui-react @aws-amplify/api-graphql @aws-amplify/ui
+# other
+npm install recoil react-icons \
+  @onflow/fcl @onflow/types
+npm install -D @faker-js/faker \
+  react-ace ace-builds 
 # eslint settings
 npm init @eslint/config
 ```
@@ -76,4 +83,29 @@ npm install
 ### deploy 
 ```sh
 npx serverless deploy --aws-profile=***
+```
+
+# run locally
+
+## run Emulator
+
+- install flow-cli
+
+```sh
+brew install flow-cli
+
+flow version
+> Version: v0.39.3
+```
+
+- run emulator & wallet
+
+```sh
+flow init
+# terminal1
+flow emulator
+# terminal2
+flow dev-wallet -l debug
+# terminal3
+flow deploy --network=emulator --update
 ```

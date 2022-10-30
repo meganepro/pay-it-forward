@@ -13,8 +13,29 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true
+    "incremental": true,
+    "baseUrl": "./", // aliasのため其の1
+    "paths": { // aliasのため其の2
+      "@/*": [
+        "./src/*"
+      ],
+    },
+    "typeRoots": [
+      "node_modules/@types",         // デフォルトではここだけ読む.忘れず書き添える
+      "types" // ここを読むように変更
+    ],
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "amplify/**/*.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    ".storybook/**/*.ts",
+    ".storybook/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

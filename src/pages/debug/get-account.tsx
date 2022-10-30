@@ -6,14 +6,15 @@ const DefaultContainer = dynamic(async () => await import('@/layouts/default/ind
   ssr: false,
 });
 
-const HomeContainer = dynamic(async () => await import('@/components/organisms/home/Home'), {
-  ssr: false,
-});
+const DebugContainer = dynamic(
+  async () => await import('@/components/organisms/debug/get-account'),
+  { ssr: false },
+);
 
-const HomePage: NextPage = (props) => (
+const DebugPage: NextPage = (props) => (
   <DefaultContainer {...props}>
-    <HomeContainer {...props} />
+    <DebugContainer {...props} />
   </DefaultContainer>
 );
 
-export default HomePage;
+export default DebugPage;

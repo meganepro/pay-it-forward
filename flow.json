@@ -9,5 +9,17 @@
 			"address": "f8d6e0586b0a20c7",
 			"key": "cbc2b0d2ce6c74aa0ebea0fd78362354518482d6755d2b12b42949c5b6604aa5"
 		}
+	},
+	"deployments": {
+    "emulator": {
+      "emulator-account": [
+        "NonFungibleToken",
+        "PayItForward"
+      ]
+    }
+  },
+	"contracts": {
+    "NonFungibleToken": "./src/cadence//NonFungibleToken.cdc",
+    "PayItForward": "./src/cadence/PayItForward.cdc"
 	}
 }
