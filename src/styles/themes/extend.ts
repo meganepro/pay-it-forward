@@ -13,7 +13,7 @@ const styles = {
 
 const fonts = {
   body: 'EB Garamond',
-  heading: 'serif',
+  heading: 'EB Garamond',
 };
 
 const colors = {

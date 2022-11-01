@@ -1,7 +1,9 @@
 import { Box } from '@chakra-ui/react';
 import * as fcl from '@onflow/fcl';
 import { FC, useEffect } from 'react';
+import { FiHome, FiStar, FiSettings, FiCpu, FiCreditCard } from 'react-icons/fi';
 import { useRecoilState } from 'recoil';
+import { Sidebar } from '@/components/molecules/sidebar/Sidebar';
 import { Header } from '@/containers/molecules/header';
 import networkState from '@/store';
 
@@ -36,12 +38,55 @@ const DefaultLayout: FC<DefaultLayoutProps> = (props: DefaultLayoutProps) => {
     });
   }, [network]);
 
+  const linkItems = [
+    { name: 'Home', icon: FiHome, linkTo: '/' },
+    { name: 'Debug(CurrentUser)', icon: FiStar, linkTo: '/debug/current-user' },
+    {
+      name: 'Debug(GetAccount)',
+      icon: FiSettings,
+      linkTo: '/debug/get-account',
+    },
+    { name: 'Debug(RunScript)', icon: FiCpu, linkTo: '/debug/run-script' },
+    {
+      name: 'Debug(SendTransaction)',
+      icon: FiCreditCard,
+      linkTo: '/debug/send-transaction',
+    },
+    {
+      name: 'Debug(deployContract)',
+      icon: FiCreditCard,
+      linkTo: '/debug/deploy-contract',
+    },
+    {
+      name: 'Debug(01_AgentInitialize)',
+      icon: FiCreditCard,
+      linkTo: '/debug/01_AgentInitialize',
+    },
+    {
+      name: 'Debug(02_AgentMintToSelf)',
+      icon: FiCreditCard,
+      linkTo: '/debug/02_AgentMintToSelf',
+    },
+    {
+      name: 'Debug(03_UserReceiveNFT)',
+      icon: FiCreditCard,
+      linkTo: '/debug/03_UserReceiveNFT',
+    },
+    {
+      name: 'Debug(06_Check)',
+      icon: FiCreditCard,
+      linkTo: '/debug/06_Check',
+    },
+  ];
+
   return (
     <>
       <Header />
-      <Box as="main" w="90vw" m="0 auto" mt="5vh">
-        {children}
-      </Box>
+      <Sidebar linkItems={linkItems}>
+        <Box as="main" w="70vw" m="0 auto">
+          {children}
+        </Box>
+      </Sidebar>
     </>
   );
 };

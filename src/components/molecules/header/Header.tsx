@@ -33,9 +33,22 @@ export const Header: FC<HeaderProps> = (props) => (
     zIndex={100}
   >
     <Flex alignItems="center" h="10vh">
-      <Text variant="h4" m="5" ml="10">
+      <Text
+        variant="h4"
+        m="5"
+        ml="10"
+        width="50vd"
+        height="34px"
+        fontFamily="Junge"
+        fontStyle="normal"
+        fontWeight="400"
+        fontSize="28px"
+        letterSpacing="0.15em"
+        color="#000000"
+        textShadow="0px 4px 4px rgba(0, 0, 0, 0.25)"
+      >
         <Link href="/" style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
-          Pay It Forward
+          PAY IT FORWARD
         </Link>
       </Text>
       <Spacer />
@@ -63,7 +76,15 @@ export const Header: FC<HeaderProps> = (props) => (
               {props.address}
             </MenuButton>
             <MenuList backgroundColor="yellow.50">
-              <MenuItem>MyPage</MenuItem>
+              <MenuItem>
+                <Link
+                  href={`/${props.address}/info`}
+                  style={{ textDecoration: 'none' }}
+                  _focus={{ boxShadow: 'none' }}
+                >
+                  My Page
+                </Link>
+              </MenuItem>
               <MenuItem
                 onClick={(e) => {
                   void props.signInOrOut(e);
@@ -75,6 +96,7 @@ export const Header: FC<HeaderProps> = (props) => (
           </Menu>
         </Flex>
       )}
+      <Box w="2vw" />
     </Flex>
   </Box>
 );

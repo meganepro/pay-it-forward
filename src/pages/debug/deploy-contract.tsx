@@ -2,7 +2,7 @@ import { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 import React from 'react';
 
-const DefaultContainer = dynamic(async () => await import('@/layouts/default/index'), {
+const DefaultContainer = dynamic(async () => await import('@/layouts/debug/index'), {
   ssr: false,
 });
 

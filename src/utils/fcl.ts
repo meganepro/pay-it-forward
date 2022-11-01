@@ -1,4 +1,5 @@
 import * as fcl from '@onflow/fcl';
+// import * as t from '@onflow/types';
 
 export default class FclUtils {
   static isExpired = (tx: fcl.TransactionObject): boolean => tx.status === 5;
@@ -34,6 +35,21 @@ export default class FclUtils {
 
       return {
         type: 'String',
+        value: v,
+      };
+    },
+    (v: unknown) => v,
+  );
+
+  static Address: fcl.FType['Address'] = FclUtils.type(
+    'Address',
+    (v: unknown): { type: string; value: unknown } | undefined => {
+      if (!FclUtils.isString(v)) {
+        FclUtils.throwTypeError('Expected Address for type Address');
+      }
+
+      return {
+        type: 'Address',
         value: v,
       };
     },
