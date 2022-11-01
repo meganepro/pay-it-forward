@@ -76,15 +76,20 @@ export const Header: FC<HeaderProps> = (props) => (
               {props.address}
             </MenuButton>
             <MenuList backgroundColor="yellow.50">
-              <MenuItem>
-                <Link
-                  href={`/${props.address}/info`}
-                  style={{ textDecoration: 'none' }}
-                  _focus={{ boxShadow: 'none' }}
-                >
-                  My Page
-                </Link>
-              </MenuItem>
+              <Link
+                href={`/${props.address}/info`}
+                style={{ textDecoration: 'none' }}
+                _focus={{ boxShadow: 'none' }}
+              >
+                <MenuItem>My Page</MenuItem>
+              </Link>
+              <Link
+                href={`/${props.address}/receive`}
+                style={{ textDecoration: 'none' }}
+                _focus={{ boxShadow: 'none' }}
+              >
+                <MenuItem>Pay It Forward</MenuItem>
+              </Link>
               <MenuItem
                 onClick={(e) => {
                   void props.signInOrOut(e);

@@ -1,9 +1,13 @@
-import { FC } from 'react';
+import { FC, MouseEvent } from 'react';
 import { Header as HeaderComponents } from '@/components/molecules/header';
-import { useWalletLogin } from '@/hooks/fcl/useWalletLogin';
 
-export const Header: FC = () => {
-  const [loggedIn, signInOrOut, address] = useWalletLogin();
+type HeaderProps = {
+  loggedIn: boolean;
+  signInOrOut: (event: MouseEvent<HTMLButtonElement>) => Promise<void>;
+  address: string;
+};
+export const Header: FC<HeaderProps> = (props) => {
+  const { loggedIn, signInOrOut, address } = props;
 
   return <HeaderComponents loggedIn={loggedIn} signInOrOut={signInOrOut} address={address} />;
 };

@@ -1,11 +1,11 @@
 import {
   Box,
+  Center,
   Divider,
   Heading,
   HStack,
   Img,
   SlideFade,
-  Spacer,
   Text,
   useDisclosure,
   VStack,
@@ -52,48 +52,111 @@ const User: FC<UserProps> = (props) => {
           <Img w="60vw" src="/images/00029.png" shadow="dark-lg" />
         </HStack>
       </SlideFade>
-      <Box h="5" />
+      <Box h="10" />
       <SlideFade
         in={isOpen}
         offsetY="20px"
         delay={1}
         transition={{ enter: { ease: 'easeIn', duration: '1' } }}
       >
-        {data.user
-          ? Object.entries(data.user.toPays).map(([nftId, value]) => (
-              <Box key={nftId} p={5} shadow="md" borderWidth="1px" mb="1">
-                <HStack mb="2">
-                  <VStack w="40vw">
-                    <Heading alignSelf="baseline" fontSize="xs">
-                      NFT ID
-                    </Heading>
-                    <Text alignSelf="baseline" pl="10" mt={4}>
-                      {nftId}
-                    </Text>
-                  </VStack>
-                  <Spacer />
-                  <VStack w="40vw">
-                    <Heading alignSelf="baseline" fontSize="xs">
-                      Original NFT ID
-                    </Heading>
-                    <Text alignSelf="baseline" pl="10" mt={4}>
-                      {value.oriId}
-                    </Text>
-                  </VStack>
-                  <Spacer />
-                </HStack>
-                <Divider />
-                <VStack mt="2">
+        <Box>
+          <Heading alignSelf="baseline" fontSize="md" mb="3">
+            あなたが受け取った想い
+          </Heading>
+        </Box>
+        {data.user ? (
+          Object.entries(data.user.received).map(([nftId, value]) => (
+            <Box key={nftId} p={4} shadow="md" borderWidth="1px" mb="1">
+              <HStack>
+                <VStack w="15vw">
+                  <Heading alignSelf="baseline" fontSize="xs">
+                    NFT ID
+                  </Heading>
+                  <Text alignSelf="baseline" mt={4}>
+                    {nftId}
+                  </Text>
+                </VStack>
+                <Center height="7vh">
+                  <Divider orientation="vertical" borderColor="blackAlpha.300" ml="1" mr="1" />
+                </Center>
+                <VStack w="15vw">
+                  <Heading alignSelf="baseline" fontSize="xs">
+                    Original NFT ID
+                  </Heading>
+                  <Text alignSelf="baseline" mt={4}>
+                    {value}
+                  </Text>
+                </VStack>
+                <Center height="7vh">
+                  <Divider orientation="vertical" borderColor="blackAlpha.300" ml="1" mr="1" />
+                </Center>
+                {/* <VStack w="50vw">
                   <Heading alignSelf="baseline" fontSize="xs">
                     Context
                   </Heading>
-                  <Text alignSelf="baseline" pl="10" mt={4}>
+                  <Text alignSelf="baseline" mt={4}>
+                    {value.context}
+                  </Text>
+                </VStack> */}
+              </HStack>
+            </Box>
+          ))
+        ) : (
+          <Text>まだ、想いを受け取ってないようです</Text>
+        )}
+      </SlideFade>
+      <Box h="10" />
+      <SlideFade
+        in={isOpen}
+        offsetY="20px"
+        delay={1}
+        transition={{ enter: { ease: 'easeIn', duration: '1' } }}
+      >
+        <Box>
+          <Heading alignSelf="baseline" fontSize="md" mb="3">
+            あなたが渡せる想い
+          </Heading>
+        </Box>
+        {data.user ? (
+          Object.entries(data.user.toPays).map(([nftId, value]) => (
+            <Box key={nftId} p={4} shadow="md" borderWidth="1px" mb="1">
+              <HStack>
+                <VStack w="15vw">
+                  <Heading alignSelf="baseline" fontSize="xs">
+                    NFT ID
+                  </Heading>
+                  <Text alignSelf="baseline" mt={4}>
+                    {nftId}
+                  </Text>
+                </VStack>
+                <Center height="7vh">
+                  <Divider orientation="vertical" borderColor="blackAlpha.300" ml="1" mr="1" />
+                </Center>
+                <VStack w="15vw">
+                  <Heading alignSelf="baseline" fontSize="xs">
+                    Original NFT ID
+                  </Heading>
+                  <Text alignSelf="baseline" mt={4}>
+                    {value.oriId}
+                  </Text>
+                </VStack>
+                <Center height="7vh">
+                  <Divider orientation="vertical" borderColor="blackAlpha.300" ml="1" mr="1" />
+                </Center>
+                <VStack w="50vw">
+                  <Heading alignSelf="baseline" fontSize="xs">
+                    Context
+                  </Heading>
+                  <Text alignSelf="baseline" mt={4}>
                     {value.context}
                   </Text>
                 </VStack>
-              </Box>
-            ))
-          : null}
+              </HStack>
+            </Box>
+          ))
+        ) : (
+          <Text>まだ、想いを受け取ってないようです</Text>
+        )}
       </SlideFade>
     </>
   );

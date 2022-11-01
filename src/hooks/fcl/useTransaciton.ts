@@ -42,6 +42,7 @@ export const useTransaction = (): [
           } else if (FclUtils.isFinalized(currentTransaction)) {
             setStatus('Transaction is Finalized');
           }
+          setResult(currentTransaction);
         });
       } catch (error) {
         // eslint-disable-next-line no-console

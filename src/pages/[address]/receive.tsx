@@ -22,7 +22,7 @@ const HomePage: NextPage = (props) => {
 
   return (
     <DefaultContainer {...props}>
-      <ReceiveContainer {...{ ...props, address }} />
+      <ReceiveContainer {...{ ...props, pathAddress: address }} />
     </DefaultContainer>
   );
 };

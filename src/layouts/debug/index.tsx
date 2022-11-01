@@ -1,19 +1,21 @@
 import { Box } from '@chakra-ui/react';
 import * as fcl from '@onflow/fcl';
-import { FC, useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 import { FiHome, FiStar, FiSettings, FiCpu, FiCreditCard } from 'react-icons/fi';
 import { useRecoilState } from 'recoil';
 import { Sidebar } from '@/components/molecules/sidebar/Sidebar';
 import { Header } from '@/containers/molecules/header';
+import { useWalletLogin } from '@/hooks/fcl/useWalletLogin';
 import networkState from '@/store';
 
 type DefaultLayoutProps = {
-  children: React.ReactNode;
+  children: React.ReactElement;
 };
 
 const DefaultLayout: FC<DefaultLayoutProps> = (props: DefaultLayoutProps) => {
   const { children } = props;
   const [network] = useRecoilState(networkState);
+  const [loggedIn, signInOrOut, address] = useWalletLogin();
 
   useEffect(() => {
     console.log('config load');
@@ -81,10 +83,10 @@ const DefaultLayout: FC<DefaultLayoutProps> = (props: DefaultLayoutProps) => {
 
   return (
     <>
-      <Header />
+      <Header loggedIn={loggedIn} signInOrOut={signInOrOut} address={address} />
       <Sidebar linkItems={linkItems}>
         <Box as="main" w="70vw" m="0 auto">
-          {children}
+          {React.cloneElement(children, { loggedInAddress: address })}
         </Box>
       </Sidebar>
     </>
