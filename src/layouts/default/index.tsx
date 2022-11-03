@@ -41,7 +41,7 @@ const DefaultLayout: FC<DefaultLayoutProps> = (props: DefaultLayoutProps) => {
   return (
     <>
       <Header loggedIn={loggedIn} signInOrOut={signInOrOut} address={address} />
-      <Box as="main" w="70vw" m="0 auto" mt="5vh">
+      <Box as="main" w="70vw" m="0 auto" mt="5vh" mb="5vh">
         {React.cloneElement(children, { loggedInAddress: address })}
       </Box>
     </>
