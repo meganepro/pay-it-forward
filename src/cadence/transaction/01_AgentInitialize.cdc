@@ -12,8 +12,9 @@ transaction {
       agent.save(<- PayItForward.createEmptyCollection(), to: PayItForward.CollectionStoragePath)
     }
     // public path
-    if agent.getCapability(PayItForward.CollectionPublicPath).borrow<&{PayItForward.CollectionPublic}>() == nil {
-      agent.link<&{PayItForward.CollectionPublic}>(
+    if agent.getCapability(PayItForward.CollectionPublicPath).borrow<&{PayItForward.CollectionPublic, PayItForward.Gifter}>() == nil {
+      //agent.unlink(PayItForward.CollectionPublicPath)
+      agent.link<&{PayItForward.CollectionPublic, PayItForward.Gifter}>(
         PayItForward.CollectionPublicPath,
         target: PayItForward.CollectionStoragePath
       )

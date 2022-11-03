@@ -14,34 +14,43 @@ pub fun main(): {String: AnyStruct} {
     for name in addresses.keys {
       // collection -> item & nft
       let collectionRef = getAccount(addresses[name]!).getCapability(PayItForward.CollectionPublicPath)
-      .borrow<&AnyResource{PayItForward.CollectionPublic}>()
+      .borrow<&AnyResource{PayItForward.CollectionPublic, PayItForward.Gifter}>()
       if(collectionRef == nil){
         continue
       }
       // toPay
       let toPays = collectionRef!.borrowToPays()
-      let nfts: {UInt64: AnyStruct} = {}
+      let toPayNfts: {UInt64: AnyStruct} = {}
       var count = toPays.length
       while count > 0 {
         let nft = toPays.removeFirst()
-        nfts[nft.id] = {"oriId": nft.originalNftId, "context": nft.context}
+        toPayNfts[nft.id] = {"oriId": nft.originalNftId, "context": nft.context}
         count = count - 1
       }
 
       // received
-      let receiveds: {UInt64: AnyStruct} = {}
       let receivedIds = collectionRef!.getReceivedOriginalIds()
+      let receivedNfts: {UInt64: AnyStruct} = {}
       for receivedId in receivedIds {
-        let nftRef = collectionRef!.borrowReceiveds(originalId: receivedId)
-        receiveds[nftRef.id] = nftRef.originalNftId
+        let nft = collectionRef!.borrowReceiveds(originalId: receivedId)
+        receivedNfts[nft.id] = {"oriId": nft.originalNftId, "context": nft.context}
       }
 
-
-
+      // proof
+      let proofs: {UInt64: PayItForward.ProofData} = collectionRef!.proof
+      let proofNfts: {UInt64: AnyStruct} = {}
+      for proofId in proofs.keys {
+        let proofData = proofs[proofId]!
+        let collectionRef = getAccount(proofData.address).getCapability(PayItForward.CollectionPublicPath)
+      .borrow<&AnyResource{PayItForward.CollectionPublic}>()!
+        let nft = collectionRef!.borrowReceiveds(originalId: proofData.originalNftId)
+        proofNfts[nft.id] = {"oriId": nft.originalNftId, "context": nft.context}
+      }
       // syu-kei
       res[name] = {
-        "received": receiveds,
-        "toPays": nfts
+        "received": receivedNfts,
+        "toPay": toPayNfts,
+        "proof": proofNfts
       }
     }
     res["total"] = {"totalSupply": PayItForward.totalSupply}

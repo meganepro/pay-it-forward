@@ -1,5 +1,5 @@
-//import NonFungibleToken from 0x01cf0e2f2f715450 // for vscode extension
-import NonFungibleToken from 0xf8d6e0586b0a20c7 // for emulator
+import NonFungibleToken from 0x01cf0e2f2f715450 // for vscode extension
+//import NonFungibleToken from 0xf8d6e0586b0a20c7 // for emulator
 
 pub contract PayItForward {
 
@@ -55,9 +55,27 @@ pub contract PayItForward {
     }
   }
 
+  pub struct ProofData {
+    pub let address: Address
+    pub let originalNftId: UInt64
+    init(
+      address: Address,
+      originalNftId: UInt64,
+    ) {
+      self.address = address
+      self.originalNftId = originalNftId
+    }
+  }
+
   // 渡し手（イイことした側）
   pub resource interface Gifter {
-    pub fun withdraw(): @NFT
+    // TODO これはaccess(contract)で良いのでは？
+    pub var proof: {UInt64: ProofData}
+    pub fun withdraw(newOwner: Address): @NFT {
+      post{
+        before(self.proof.keys.length) + 1 == self.proof.keys.length: "Must increment One."
+      }
+    }
   }
 
   // 貰い手（イイコトされた側）
@@ -65,7 +83,7 @@ pub contract PayItForward {
     pub var toPay: @[NFT]
     pub fun addToPay(nft: @NFT)
     pub fun addReceived(nft: @NFT)
-    pub fun deposit(gifterCapability: Capability<&AnyResource{PayItForward.CollectionPublic}>, context: String){
+    pub fun deposit(gifterCapability: Capability<&AnyResource{PayItForward.Gifter}>, context: String){
       post{
         before(self.toPay.length) + 3 ==  self.toPay.length: "Must add 3 toPay NFT"
       }
@@ -76,7 +94,6 @@ pub contract PayItForward {
   // Interface that an account would commonly 
   // publish for their collection
   pub resource interface CollectionPublic {
-    pub fun withdraw(): @NFT
     pub fun getReceivedOriginalIds(): [UInt64]
     pub fun borrowReceiveds(originalId: UInt64): &PayItForward.NFT
     pub fun borrowToPays(): &[&PayItForward.NFT]
@@ -84,12 +101,22 @@ pub contract PayItForward {
 
   pub resource Collection: Gifter, Giftee, CollectionPublic
   {
+    pub var proof: {UInt64: ProofData}
     pub var received: @{UInt64: NFT}
     pub var toPay: @[NFT]
 
     // FIFO
-    pub fun withdraw(): @NFT {
-      return <- self.toPay.removeFirst()!
+    pub fun withdraw(newOwner: Address): @NFT {
+      let nft <- self.toPay.removeFirst()
+      self.depositProof(nft: &nft as &PayItForward.NFT, newOwner: newOwner)
+      return <- nft
+    }
+
+    priv fun depositProof(nft: &NFT, newOwner: Address) {
+      pre{
+        !self.proof.containsKey(nft.id): "That good deed proof was already proof."
+      }
+      self.proof[nft.id] = PayItForward.ProofData(newOwner, nft.originalNftId)
     }
 
     pub fun addToPay(nft: @NFT) {
@@ -102,13 +129,13 @@ pub contract PayItForward {
     }
 
     // 人から受け取ってmintする
-    pub fun deposit(gifterCapability: Capability<&AnyResource{PayItForward.CollectionPublic}>, context: String){
+    pub fun deposit(gifterCapability: Capability<&AnyResource{PayItForward.Gifter}>, context: String){
       pre {
           gifterCapability.borrow() != nil: "Could not borrow gifter capability."
           self.owner!.address != gifterCapability.address : "Could not mint same user."
       }
       // received
-      let token <- gifterCapability.borrow()!.withdraw()
+      let token <- gifterCapability.borrow()!.withdraw(newOwner: self.owner!.address)
       assert(!self.received.containsKey(token.originalNftId), message: "That good deed was already received.")
 
       // mint to pay it forward
@@ -156,6 +183,7 @@ pub contract PayItForward {
     }
 
     init() {
+      self.proof = {}
       self.received <- {}
       self.toPay <- []
     }

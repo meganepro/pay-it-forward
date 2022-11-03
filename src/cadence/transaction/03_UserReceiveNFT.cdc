@@ -3,7 +3,7 @@ import PayItForward from 0x01cf0e2f2f715450
 
 // user(bob)
 transaction {
-  let gifterCap: Capability<&AnyResource{PayItForward.CollectionPublic}>
+  let gifterCap: Capability<&AnyResource{PayItForward.Gifter}>
   let gifteeRef: &AnyResource{PayItForward.Giftee}
   let context: String
   prepare(user: AuthAccount) {
@@ -18,7 +18,7 @@ transaction {
     //##################################
     // Gifter check
     //##################################
-    self.gifterCap = getAccount(from).getCapability<&AnyResource{PayItForward.CollectionPublic}>(PayItForward.CollectionPublicPath)
+    self.gifterCap = getAccount(from).getCapability<&AnyResource{PayItForward.Gifter}>(PayItForward.CollectionPublicPath)
     //##################################
     // Giftee initialize
     //##################################
@@ -27,8 +27,9 @@ transaction {
       user.save(<- PayItForward.createEmptyCollection(), to: PayItForward.CollectionStoragePath)
     }
     // public path
-    if user.getCapability(PayItForward.CollectionPublicPath).borrow<&{PayItForward.CollectionPublic}>() == nil {
-      user.link<&{PayItForward.CollectionPublic}>(
+    if user.getCapability(PayItForward.CollectionPublicPath).borrow<&{PayItForward.CollectionPublic, PayItForward.Gifter}>() == nil {
+      //user.unlink(PayItForward.CollectionPublicPath)
+      user.link<&{PayItForward.CollectionPublic, PayItForward.Gifter}>(
         PayItForward.CollectionPublicPath,
         target: PayItForward.CollectionStoragePath
       )
