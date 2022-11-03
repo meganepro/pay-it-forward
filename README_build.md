@@ -49,7 +49,8 @@ npm install -D simple-git-hooks
 npm install aws-amplify @aws-amplify/ui-react @aws-amplify/api-graphql @aws-amplify/ui
 # other
 npm install recoil react-icons \
-  @onflow/fcl @onflow/types
+  @onflow/fcl @onflow/types \
+  @svgr/webpack
 npm install -D @faker-js/faker \
   react-ace ace-builds 
 # eslint settings
