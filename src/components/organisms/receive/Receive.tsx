@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { CheckCircleIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -25,7 +26,7 @@ import PayItForward from ${process.env.ContractAddress!}
 
 // user(bob)
 transaction(from: Address, context: String) {
-  let gifterCap: Capability<&AnyResource{PayItForward.CollectionPublic}>
+  let gifterCap: Capability<&AnyResource{PayItForward.Gifter}>
   let gifteeRef: &AnyResource{PayItForward.Giftee}
   let context: String
   prepare(user: AuthAccount) {
@@ -40,7 +41,7 @@ transaction(from: Address, context: String) {
     //##################################
     // Gifter check
     //##################################
-    self.gifterCap = getAccount(from).getCapability<&AnyResource{PayItForward.CollectionPublic}>(PayItForward.CollectionPublicPath)
+    self.gifterCap = getAccount(from).getCapability<&AnyResource{PayItForward.Gifter}>(PayItForward.CollectionPublicPath)
     //##################################
     // Giftee initialize
     //##################################
@@ -49,8 +50,9 @@ transaction(from: Address, context: String) {
       user.save(<- PayItForward.createEmptyCollection(), to: PayItForward.CollectionStoragePath)
     }
     // public path
-    if user.getCapability(PayItForward.CollectionPublicPath).borrow<&{PayItForward.CollectionPublic}>() == nil {
-      user.link<&{PayItForward.CollectionPublic}>(
+    if user.getCapability(PayItForward.CollectionPublicPath).borrow<&{PayItForward.CollectionPublic, PayItForward.Gifter}>() == nil {
+      //user.unlink(PayItForward.CollectionPublicPath)
+      user.link<&{PayItForward.CollectionPublic, PayItForward.Gifter}>(
         PayItForward.CollectionPublicPath,
         target: PayItForward.CollectionStoragePath
       )
@@ -114,6 +116,12 @@ const Receive: FC<ReceiveProps> = (props) => {
     // onToggle();
   }, [onToggle, isOpen]);
 
+  useEffect(() => {
+    if (transactionResult && transactionResult?.status >= 4) {
+      setContext('');
+    }
+  }, [transactionResult]);
+
   return (
     <>
       <SlideFade
@@ -142,6 +150,7 @@ const Receive: FC<ReceiveProps> = (props) => {
                   onChange={(e) => {
                     setContext(e.target.value);
                   }}
+                  value={context}
                 />
                 <Spacer />
                 <Heading alignSelf="baseline" fontSize="xs">
@@ -218,13 +227,26 @@ const Receive: FC<ReceiveProps> = (props) => {
                     </HStack>
                   </>
                 ) : null}
+                {transactionResult?.status === 4 && transactionResult?.statusCode === 0 ? (
+                  <>
+                    <Divider borderColor="blackAlpha.300" />
+                    <HStack alignItems="left">
+                      <Heading minW="20vw" w="20vw" fontSize="xs">
+                        MESSAGE
+                      </Heading>
+                      <Text overflowWrap="anywhere" fontSize="small" color="green.500">
+                        Transaction SEALED Successfully <CheckCircleIcon />
+                      </Text>
+                    </HStack>
+                  </>
+                ) : null}
               </VStack>
             </>
           ) : null}
         </Box>
         {props.loggedInAddress === props.pathAddress ? (
           <Text textAlign="right" fontSize="small">
-            ※このページのURLもしくはQRコードを助けた人に受け取ってもらいましょう
+            ※このページのURLもしくはQRコードを助けた人に送りましょう。
           </Text>
         ) : null}
       </SlideFade>
