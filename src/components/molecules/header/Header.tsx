@@ -2,7 +2,6 @@ import { ChevronDownIcon } from '@chakra-ui/icons';
 import {
   Box,
   Flex,
-  Link,
   Spacer,
   Button,
   Menu,
@@ -11,6 +10,7 @@ import {
   MenuItem,
   Text,
 } from '@chakra-ui/react';
+import Link from 'next/link';
 import { FC, MouseEvent } from 'react';
 
 export type HeaderProps = {
@@ -47,7 +47,7 @@ export const Header: FC<HeaderProps> = (props) => (
         color="#000000"
         textShadow="0px 4px 4px rgba(0, 0, 0, 0.25)"
       >
-        <Link href="/" style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
+        <Link href="/" style={{ textDecoration: 'none' }}>
           PAY IT FORWARD
         </Link>
       </Text>
@@ -76,18 +76,10 @@ export const Header: FC<HeaderProps> = (props) => (
               {props.address}
             </MenuButton>
             <MenuList backgroundColor="yellow.50">
-              <Link
-                href={`/${props.address}/info`}
-                style={{ textDecoration: 'none' }}
-                _focus={{ boxShadow: 'none' }}
-              >
+              <Link href={`/${props.address}/info`} style={{ textDecoration: 'none' }}>
                 <MenuItem>My Page</MenuItem>
               </Link>
-              <Link
-                href={`/${props.address}/receive`}
-                style={{ textDecoration: 'none' }}
-                _focus={{ boxShadow: 'none' }}
-              >
+              <Link href={`/${props.address}/receive`} style={{ textDecoration: 'none' }}>
                 <MenuItem>Pay It Forward</MenuItem>
               </Link>
               <MenuItem
