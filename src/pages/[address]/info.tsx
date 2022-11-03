@@ -19,7 +19,7 @@ const HomePage: NextPage = (props) => {
 
   return (
     <DefaultContainer {...props}>
-      <UserContainer {...{ ...props, address }} />
+      <UserContainer {...{ ...props, pathAddress: address }} />
     </DefaultContainer>
   );
 };

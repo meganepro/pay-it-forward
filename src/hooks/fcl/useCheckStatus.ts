@@ -17,32 +17,64 @@ pub fun main(): {String: AnyStruct} {
     for name in addresses.keys {
       // collection -> item & nft
       let collectionRef = getAccount(addresses[name]!).getCapability(PayItForward.CollectionPublicPath)
-      .borrow<&AnyResource{PayItForward.CollectionPublic}>()
+      .borrow<&AnyResource{PayItForward.CollectionPublic, PayItForward.Gifter}>()
       if(collectionRef == nil){
         continue
       }
       // toPay
       let toPays = collectionRef!.borrowToPays()
-      let nfts: {UInt64: AnyStruct} = {}
+      let toPayNfts: [AnyStruct] = []
       var count = toPays.length
       while count > 0 {
         let nft = toPays.removeFirst()
-        nfts[nft.id] = {"oriId": nft.originalNftId, "context": nft.context}
+        toPayNfts.append({
+          "id": nft.id,
+          "originalNftId": nft.originalNftId,
+          "context": nft.context,
+          "createdAt": nft.timestamp,
+          "gifter": nft.from,
+          "giftee": ""
+        })
         count = count - 1
       }
 
       // received
-      let receiveds: {UInt64: AnyStruct} = {}
       let receivedIds = collectionRef!.getReceivedOriginalIds()
+      let receivedNfts: [AnyStruct] = []
       for receivedId in receivedIds {
-        let nftRef = collectionRef!.borrowReceiveds(originalId: receivedId)
-        receiveds[nftRef.id] = nftRef.originalNftId
+        let nft = collectionRef!.borrowReceiveds(originalId: receivedId)
+        receivedNfts.append({
+          "id": nft.id,
+          "originalNftId": nft.originalNftId,
+          "context": nft.context,
+          "createdAt": nft.timestamp,
+          "gifter": nft.from,
+          "giftee": nft.owner!.address
+        })
       }
 
+      // proof
+      let proofs: {UInt64: PayItForward.ProofData} = collectionRef!.proof
+      let proofNfts: [AnyStruct] = []
+      for proofId in proofs.keys {
+        let proofData = proofs[proofId]!
+        let collectionRef = getAccount(proofData.address).getCapability(PayItForward.CollectionPublicPath)
+      .borrow<&AnyResource{PayItForward.CollectionPublic}>()!
+        let nft = collectionRef!.borrowReceiveds(originalId: proofData.originalNftId)
+        proofNfts.append({
+          "id": nft.id,
+          "originalNftId": nft.originalNftId,
+          "context": nft.context,
+          "createdAt": nft.timestamp,
+          "gifter": nft.from,
+          "giftee": nft.owner!.address
+        })
+      }
       // syu-kei
       res[name] = {
-        "received": receiveds,
-        "toPays": nfts
+        "received": receivedNfts,
+        "toPay": toPayNfts,
+        "proof": proofNfts
       }
     }
     res["total"] = {"totalSupply": PayItForward.totalSupply}
@@ -53,13 +85,9 @@ pub fun main(): {String: AnyStruct} {
 type CheckType = {
   total?: { totalSupply: string };
   user?: {
-    received: { [key in number]: string };
-    toPays: {
-      [key in number]: {
-        oriId: string;
-        context: string;
-      };
-    };
+    received: Nft[];
+    toPay: Nft[];
+    proof: Nft[];
   };
   error?: string;
 };

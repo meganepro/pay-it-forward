@@ -27,6 +27,9 @@ const nextConfig = {
   env: {
     ...require(`./config/${process.env.APP_ENV || 'local'}.json`),
   },
+  images: {
+    domains: ['www.gravatar.com'],
+  },
 };
 
 module.exports = nextConfig;

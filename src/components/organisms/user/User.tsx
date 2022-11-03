@@ -1,24 +1,25 @@
 import {
   Box,
-  Center,
-  Divider,
   Heading,
   HStack,
   Img,
   SlideFade,
   Text,
+  Tooltip,
   useDisclosure,
-  VStack,
 } from '@chakra-ui/react';
+import Link from 'next/link';
 import React, { FC, useEffect } from 'react';
+import NftCard from '@/components/molecules/nft-card/NftCard';
 import { useCheckStatus } from '@/hooks/fcl/useCheckStatus';
 
 type UserProps = {
-  address?: string;
+  pathAddress?: string;
+  loggedInAddress?: string;
 };
 const User: FC<UserProps> = (props) => {
   const { isOpen, onToggle } = useDisclosure();
-  const [script, data] = useCheckStatus(props.address ?? '');
+  const [script, data] = useCheckStatus(props.pathAddress ?? '');
 
   useEffect(() => {
     if (!isOpen) {
@@ -61,46 +62,14 @@ const User: FC<UserProps> = (props) => {
       >
         <Box>
           <Heading alignSelf="baseline" fontSize="md" mb="3">
-            あなたが受け取った想い
+            {props.pathAddress === props.loggedInAddress
+              ? 'あなた'
+              : `${props.pathAddress ?? ''}さん`}
+            が受け取った想い
           </Heading>
         </Box>
-        {data.user ? (
-          Object.entries(data.user.received).map(([nftId, value]) => (
-            <Box key={nftId} p={4} shadow="md" borderWidth="1px" mb="1">
-              <HStack>
-                <VStack w="15vw">
-                  <Heading alignSelf="baseline" fontSize="xs">
-                    NFT ID
-                  </Heading>
-                  <Text alignSelf="baseline" mt={4}>
-                    {nftId}
-                  </Text>
-                </VStack>
-                <Center height="7vh">
-                  <Divider orientation="vertical" borderColor="blackAlpha.300" ml="1" mr="1" />
-                </Center>
-                <VStack w="15vw">
-                  <Heading alignSelf="baseline" fontSize="xs">
-                    Original NFT ID
-                  </Heading>
-                  <Text alignSelf="baseline" mt={4}>
-                    {value}
-                  </Text>
-                </VStack>
-                <Center height="7vh">
-                  <Divider orientation="vertical" borderColor="blackAlpha.300" ml="1" mr="1" />
-                </Center>
-                {/* <VStack w="50vw">
-                  <Heading alignSelf="baseline" fontSize="xs">
-                    Context
-                  </Heading>
-                  <Text alignSelf="baseline" mt={4}>
-                    {value.context}
-                  </Text>
-                </VStack> */}
-              </HStack>
-            </Box>
-          ))
+        {data.user && data.user.received.length > 0 ? (
+          data.user.received.map((nft) => <NftCard key={nft.id} {...nft} />)
         ) : (
           <Text>まだ、想いを受け取ってないようです</Text>
         )}
@@ -114,48 +83,59 @@ const User: FC<UserProps> = (props) => {
       >
         <Box>
           <Heading alignSelf="baseline" fontSize="md" mb="3">
-            あなたが渡せる想い
+            {props.pathAddress === props.loggedInAddress
+              ? 'あなた'
+              : `${props.pathAddress ?? ''}さん`}
+            が渡した想い
           </Heading>
         </Box>
-        {data.user ? (
-          Object.entries(data.user.toPays).map(([nftId, value]) => (
-            <Box key={nftId} p={4} shadow="md" borderWidth="1px" mb="1">
-              <HStack>
-                <VStack w="15vw">
-                  <Heading alignSelf="baseline" fontSize="xs">
-                    NFT ID
-                  </Heading>
-                  <Text alignSelf="baseline" mt={4}>
-                    {nftId}
-                  </Text>
-                </VStack>
-                <Center height="7vh">
-                  <Divider orientation="vertical" borderColor="blackAlpha.300" ml="1" mr="1" />
-                </Center>
-                <VStack w="15vw">
-                  <Heading alignSelf="baseline" fontSize="xs">
-                    Original NFT ID
-                  </Heading>
-                  <Text alignSelf="baseline" mt={4}>
-                    {value.oriId}
-                  </Text>
-                </VStack>
-                <Center height="7vh">
-                  <Divider orientation="vertical" borderColor="blackAlpha.300" ml="1" mr="1" />
-                </Center>
-                <VStack w="50vw">
-                  <Heading alignSelf="baseline" fontSize="xs">
-                    Context
-                  </Heading>
-                  <Text alignSelf="baseline" mt={4}>
-                    {value.context}
-                  </Text>
-                </VStack>
-              </HStack>
-            </Box>
-          ))
+        {data.user && data.user.proof.length > 0 ? (
+          data.user.proof.map((nft) => <NftCard key={nft.id} {...nft} />)
         ) : (
-          <Text>まだ、想いを受け取ってないようです</Text>
+          <Text>まだ、想いを受け取ってもらっていないようです</Text>
+        )}
+      </SlideFade>
+      <Box h="10" />
+      <SlideFade
+        in={isOpen}
+        offsetY="20px"
+        delay={1}
+        transition={{ enter: { ease: 'easeIn', duration: '1' } }}
+      >
+        <Box>
+          <Heading alignSelf="baseline" fontSize="md" mb="3">
+            {props.pathAddress === props.loggedInAddress
+              ? 'あなた'
+              : `${props.pathAddress ?? ''}さん`}
+            が渡せる想い
+          </Heading>
+        </Box>
+        {data.user && data.user.toPay.length > 0 ? (
+          data.user.toPay.map((nft, index) => {
+            if (index === 0) {
+              return (
+                <Tooltip
+                  label={`${nft.gifter}さんから受け取る`}
+                  // bg="yellow.100"
+                  // color="yellow.700"
+                  placement="top-end"
+                  key={nft.id}
+                >
+                  <Box>
+                    <Link href={`/${nft.gifter}/receive`}>
+                      <Box cursor="pointer" backgroundColor="yellow.50">
+                        <NftCard key={nft.id} {...nft} />
+                      </Box>
+                    </Link>
+                  </Box>
+                </Tooltip>
+              );
+            }
+
+            return <NftCard key={nft.id} {...nft} />;
+          })
+        ) : (
+          <Text>まだ、渡せる想いを持っていないようです</Text>
         )}
       </SlideFade>
     </>
