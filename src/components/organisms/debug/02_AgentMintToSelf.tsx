@@ -26,7 +26,6 @@ transaction {
     self.adminRef.adminDeposit(gifteeCapability: self.gifteeCap)
   }
 }
- 
 `;
 
 export const SendTransaction: FC = () => {

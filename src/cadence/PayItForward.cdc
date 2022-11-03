@@ -1,5 +1,5 @@
-import NonFungibleToken from 0x01cf0e2f2f715450 // for vscode extension
-//import NonFungibleToken from 0xf8d6e0586b0a20c7 // for emulator
+//import NonFungibleToken from 0x01cf0e2f2f715450 // for vscode extension
+import NonFungibleToken from 0xf8d6e0586b0a20c7 // for emulator
 
 pub contract PayItForward {
 
@@ -16,10 +16,12 @@ pub contract PayItForward {
     pub let id: UInt64
     pub var numForMint: Int
     pub let originalNftId: UInt64
+    pub let timestamp: UFix64
+    pub let from: Address
     pub let context: String 
 
     // もらうと増えるバイバインみたいなNFTなのでここにおく
-    access(contract) fun mintNFTs(context: String): @[PayItForward.NFT] {
+    access(contract) fun mintNFTs(ownerAddress: Address, context: String): @[PayItForward.NFT] {
       pre{
         self.numForMint > 0: "Must have a number of times left to be mint."
       }
@@ -31,7 +33,7 @@ pub contract PayItForward {
       // 受け取った善行を元に次に繋げるNFTをmintする
       let mintedNFTs: @[PayItForward.NFT] <- []
       while self.numForMint > 0 {
-        mintedNFTs.append(<- create NFT(PayItForward.totalSupply, (&self as auth &NFT), context))
+        mintedNFTs.append(<- create NFT(PayItForward.totalSupply, (&self as auth &NFT), ownerAddress, context))
         PayItForward.totalSupply = PayItForward.totalSupply + 1
         self.numForMint = self.numForMint - 1
       }
@@ -39,7 +41,7 @@ pub contract PayItForward {
       return <- mintedNFTs
     }
 
-    init(_ id: UInt64, _ originalNft: &NFT?, _ context: String) {
+    init(_ id: UInt64, _ originalNft: &NFT?, _ from: Address, _ context: String) {
       pre{
         originalNft != nil || PayItForward.isEnableMintAncestorNFT:"Must have valid nft, if not to create ancestor nft."
       }
@@ -51,7 +53,9 @@ pub contract PayItForward {
         self.originalNftId = originalNft!.id
         self.numForMint = 3
       }
+      self.from = from
       self.context = context
+      self.timestamp = getCurrentBlock().timestamp
     }
   }
 
@@ -139,7 +143,7 @@ pub contract PayItForward {
       assert(!self.received.containsKey(token.originalNftId), message: "That good deed was already received.")
 
       // mint to pay it forward
-      let mintedNFTs <- token.mintNFTs(context: context)
+      let mintedNFTs <- token.mintNFTs(ownerAddress: self.owner!.address, context: context)
       var count = mintedNFTs.length
       var mintedNftIDs: [UInt64] = []
       while count > 0 {
@@ -217,12 +221,12 @@ pub contract PayItForward {
 
       // mint ancestor token
       PayItForward.isEnableMintAncestorNFT = true
-      let token <- create NFT(PayItForward.totalSupply, nil, "mint initial nft")
+      let token <- create NFT(PayItForward.totalSupply, nil, self.owner!.address, "mint initial nft")
       PayItForward.totalSupply = PayItForward.totalSupply + 1
 
       // mint to pay it forward
       let context = "ancestor nft"
-      let mintedNFTs <- token.mintNFTs(context: context)
+      let mintedNFTs <- token.mintNFTs(ownerAddress: gifteeCapability.address ,context: context)
       var count = mintedNFTs.length
       var mintedNftIDs: [UInt64] = []
       while count > 0 {

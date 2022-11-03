@@ -20,31 +20,52 @@ pub fun main(): {String: AnyStruct} {
       }
       // toPay
       let toPays = collectionRef!.borrowToPays()
-      let toPayNfts: {UInt64: AnyStruct} = {}
+      let toPayNfts: [AnyStruct] = []
       var count = toPays.length
       while count > 0 {
         let nft = toPays.removeFirst()
-        toPayNfts[nft.id] = {"oriId": nft.originalNftId, "context": nft.context}
+        toPayNfts.append({
+          "id": nft.id,
+          "originalNftId": nft.originalNftId,
+          "context": nft.context,
+          "createdAt": nft.timestamp,
+          "gifter": nft.from,
+          "giftee": ""
+        })
         count = count - 1
       }
 
       // received
       let receivedIds = collectionRef!.getReceivedOriginalIds()
-      let receivedNfts: {UInt64: AnyStruct} = {}
+      let receivedNfts: [AnyStruct] = []
       for receivedId in receivedIds {
         let nft = collectionRef!.borrowReceiveds(originalId: receivedId)
-        receivedNfts[nft.id] = {"oriId": nft.originalNftId, "context": nft.context}
+        receivedNfts.append({
+          "id": nft.id,
+          "originalNftId": nft.originalNftId,
+          "context": nft.context,
+          "createdAt": nft.timestamp,
+          "gifter": nft.from,
+          "giftee": nft.owner!.address
+        })
       }
 
       // proof
       let proofs: {UInt64: PayItForward.ProofData} = collectionRef!.proof
-      let proofNfts: {UInt64: AnyStruct} = {}
+      let proofNfts: [AnyStruct] = []
       for proofId in proofs.keys {
         let proofData = proofs[proofId]!
         let collectionRef = getAccount(proofData.address).getCapability(PayItForward.CollectionPublicPath)
       .borrow<&AnyResource{PayItForward.CollectionPublic}>()!
         let nft = collectionRef!.borrowReceiveds(originalId: proofData.originalNftId)
-        proofNfts[nft.id] = {"oriId": nft.originalNftId, "context": nft.context}
+        proofNfts.append({
+          "id": nft.id,
+          "originalNftId": nft.originalNftId,
+          "context": nft.context,
+          "createdAt": nft.timestamp,
+          "gifter": nft.from,
+          "giftee": nft.owner!.address
+        })
       }
       // syu-kei
       res[name] = {
