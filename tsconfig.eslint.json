@@ -6,7 +6,8 @@
         "src/**/*.js",
         "src/**/*.jsx",
         "src/**/*.ts",
-        "src/**/*.tsx"
+        "src/**/*.tsx",
+        "serverless/typescript/**/*.ts",
     ],
     "exclude": [
         "node_modules"

@@ -35,6 +35,15 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# backend(python)
+site-packages
+.temp
+.serverless
+.venv
+__pycache__
+.dynamodb
+**/var/**
+
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
 amplify/.config/local-*

@@ -179,6 +179,11 @@ module.exports = {
     ],
     // promise
     'compat/compat': 'off',
+    // template
+    '@typescript-eslint/restrict-template-expressions': [
+      'off',
+      { allowAny: true }
+    ],
     // 一旦OFF
     '@typescript-eslint/no-unsafe-call': 'off',
     'react/destructuring-assignment': 'off',
