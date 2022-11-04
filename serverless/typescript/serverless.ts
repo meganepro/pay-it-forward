@@ -56,15 +56,48 @@ const serverlessConfiguration: AWS = {
               AttributeName: 'to',
               AttributeType: 'S',
             },
+            {
+              AttributeName: 'fromNftId',
+              AttributeType: 'N',
+            },
+            {
+              AttributeName: 'toNftId',
+              AttributeType: 'N',
+            },
+            {
+              AttributeName: 'timestamp',
+              AttributeType: 'N',
+            },
           ],
           KeySchema: [
             {
-              AttributeName: 'from',
+              AttributeName: 'toNftId',
               KeyType: 'HASH',
+            },
+            {
+              AttributeName: 'timestamp',
+              KeyType: 'SORT',
             },
           ],
           BillingMode: 'PAY_PER_REQUEST',
           GlobalSecondaryIndexes: [
+            {
+              IndexName: 'from-index',
+              KeySchema: [
+                {
+                  AttributeName: 'from',
+                  KeyType: 'HASH',
+                },
+                {
+                  AttributeName: 'timestamp',
+                  KeyType: 'SORT',
+                },
+              ],
+              Projection: {
+                ProjectionType: 'INCLUDE',
+                NonKeyAttributes: ['to', 'fromNftId', 'toNftId', 'context', 'transactionId'],
+              },
+            },
             {
               IndexName: 'to-index',
               KeySchema: [
@@ -72,12 +105,66 @@ const serverlessConfiguration: AWS = {
                   AttributeName: 'to',
                   KeyType: 'HASH',
                 },
+                {
+                  AttributeName: 'timestamp',
+                  KeyType: 'SORT',
+                },
               ],
               Projection: {
-                ProjectionType: 'ALL',
+                ProjectionType: 'INCLUDE',
+                NonKeyAttributes: ['from', 'fromNftId', 'toNftId', 'context', 'transactionId'],
+              },
+            },
+            {
+              IndexName: 'toNftId-index',
+              KeySchema: [
+                {
+                  AttributeName: 'fromNftId',
+                  KeyType: 'HASH',
+                },
+                {
+                  AttributeName: 'timestamp',
+                  KeyType: 'SORT',
+                },
+              ],
+              Projection: {
+                ProjectionType: 'INCLUDE',
+                NonKeyAttributes: ['from', 'to', 'toNftId', 'context', 'transactionId'],
               },
             },
           ],
+          Tags: [
+            {
+              Key: 'Service',
+              Value: '${self:service}',
+            },
+            {
+              Key: 'Stage',
+              Value: '${self:custom.stage}',
+            },
+          ],
+          PointInTimeRecoverySpecification: {
+            PointInTimeRecoveryEnabled: true,
+          },
+        },
+      },
+      CurrentBlock: {
+        Type: 'AWS::DynamoDB::Table',
+        Properties: {
+          TableName: '${self:service}-${self:custom.stage}-key-values',
+          AttributeDefinitions: [
+            {
+              AttributeName: 'key',
+              AttributeType: 'S',
+            },
+          ],
+          KeySchema: [
+            {
+              AttributeName: 'key',
+              KeyType: 'HASH',
+            },
+          ],
+          BillingMode: 'PAY_PER_REQUEST',
           Tags: [
             {
               Key: 'Service',

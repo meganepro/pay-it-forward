@@ -3,6 +3,7 @@ type RequestType = 'BLOCK' | 'EVENT';
 type FlowConfig = {
   domain: string;
   contractAddress: string;
+  readBlockStep: number;
 };
 
 type BlockEvent = {

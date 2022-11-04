@@ -81,9 +81,34 @@ npx serverless create --template aws-nodejs-typescript
 npm install
 ```
 
+### add module
+
+- serverless offline
+```sh
+# install
+sls plugin install -n serverless-offline
+sls plugin install -n serverless-dynamodb-local
+sls dynamodb install
+```
+
+### execute
+```sh
+# execute
+sls dynamodb start # only dynamodb
+sls offline start
+# run http
+sls invoke local --function monitor --path src/functions/monitor/mock.json
+sls invoke local --function ApiSample --path src/functions/api-sample/mock.json
+
+# dynamodb-admin
+npm install --location=global dynamodb-admin
+DYNAMO_ENDPOINT=http://localhost:8002 dynamodb-admin -p 8003
+```
+
 ### deploy 
 ```sh
 npx serverless deploy --aws-profile=***
+sls deploy --stage=dev
 ```
 
 # run locally

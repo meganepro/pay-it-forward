@@ -9,7 +9,7 @@ const getUrl = (domain: string, type: RequestType) => {
 const getEventUrl = (config: FlowConfig) =>
   `${getUrl(config.domain, 'EVENT')}?type=${config.contractAddress}.PayItForward.PayItForwardEvent`;
 
-export const getEvent = async (config: FlowConfig, startHeight: number, endHeight: number) => {
+const getEvent = async (config: FlowConfig, startHeight: number, endHeight: number) => {
   const url = `${getEventUrl(config)}&${new URLSearchParams({
     start_height: startHeight.toString(),
     end_height: endHeight.toString(),
@@ -24,6 +24,25 @@ export const getEvent = async (config: FlowConfig, startHeight: number, endHeigh
 
     return undefined;
   }
+};
+
+export const getEvents = async (config: FlowConfig, startHeight: number) => {
+  let isSuccess = true;
+  let data: BlockEvent[] = [];
+  while (isSuccess) {
+    console.log(`start: ${startHeight} end: ${startHeight + config.readBlockStep}`);
+    // eslint-disable-next-line no-await-in-loop
+    const value = await getEvent(config, startHeight, startHeight + config.readBlockStep);
+    if (value) {
+      startHeight += config.readBlockStep + 1;
+      data = data.concat(value);
+    } else {
+      isSuccess = !isSuccess;
+    }
+  }
+
+  // 最後に成功した取得の開始地点を保存する
+  return { eventData: data, position: startHeight - config.readBlockStep - 1 };
 };
 
 const parseCadenceType = (valueType: CadenceValueType): unknown => {
