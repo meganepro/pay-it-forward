@@ -171,7 +171,7 @@ pub contract PayItForward {
 
       // event Emit
       emit PayItForwardEvent(
-        fromNftId: token.originalNftId,
+        fromNftId: token.id,
         toNftIds: mintedNftIDs,
         from: gifterCapability.address,
         to: self.owner!.address,
@@ -257,7 +257,7 @@ pub contract PayItForward {
 
       // event Emit
       emit PayItForwardEvent(
-        fromNftId: token.originalNftId,
+        fromNftId: token.id,
         toNftIds: mintedNftIDs,
         from: self.owner!.address,
         to: gifteeCapability.address,
