@@ -22,7 +22,7 @@
     },
     "typeRoots": [
       "node_modules/@types",         // デフォルトではここだけ読む.忘れず書き添える
-      "types" // ここを読むように変更
+      "src/@types" // ここを読むように変更
     ],
   },
   "include": [
@@ -34,9 +34,9 @@
     "src/**/*.tsx",
     ".storybook/**/*.ts",
     ".storybook/**/*.tsx",
-    "serverless/**/*.ts",
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "serverless/**/*.ts",
   ]
 }

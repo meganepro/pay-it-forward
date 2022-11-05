@@ -2,10 +2,8 @@
 import { Box } from '@chakra-ui/react';
 import * as fcl from '@onflow/fcl';
 import React, { FC, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
 import { Header } from '@/containers/molecules/header';
 import { useWalletLogin } from '@/hooks/fcl/useWalletLogin';
-import networkState from '@/store';
 
 type DefaultLayoutProps = {
   children: React.ReactElement;
@@ -13,7 +11,6 @@ type DefaultLayoutProps = {
 
 const DefaultLayout: FC<DefaultLayoutProps> = (props: DefaultLayoutProps) => {
   const { children } = props;
-  const [network] = useRecoilState(networkState);
   const [loggedIn, signInOrOut, address] = useWalletLogin();
 
   useEffect(() => {
@@ -25,7 +22,7 @@ const DefaultLayout: FC<DefaultLayoutProps> = (props: DefaultLayoutProps) => {
       'app.detail.icon':
         'https://assets.website-files.com/5f6294c0c7a8cdd643b1c820/5f6294c0c7a8cd5704b1c939_favicon.png',
     });
-  }, [network]);
+  }, []);
 
   return (
     <>

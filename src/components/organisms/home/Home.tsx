@@ -1,8 +1,13 @@
 import { Box, HStack, Img, SlideFade, Text, useDisclosure } from '@chakra-ui/react';
 import React, { FC, useEffect } from 'react';
+import { getActivity } from '@/utils/api';
 
-const Home: FC = () => {
+type HomeProps = {
+  loggedInAddress?: string;
+};
+const Home: FC<HomeProps> = (props) => {
   const { isOpen, onToggle } = useDisclosure();
+  const { loggedInAddress: address } = props;
 
   useEffect(() => {
     if (!isOpen) {
@@ -10,6 +15,17 @@ const Home: FC = () => {
     }
     // onToggle();
   }, [onToggle, isOpen]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      if (address) {
+        await getActivity([address]).then((response) => {
+          console.log(response);
+        });
+      }
+    };
+    void fetch();
+  }, [address]);
 
   return (
     <SlideFade
