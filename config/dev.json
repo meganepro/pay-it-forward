@@ -4,5 +4,6 @@
   "STAGE": "dev",
   "ApiDomain": "http://localhost:3000/dev/",
   "FlowAccessNodeApi": "http://localhost:8888",
-  "FlowDiscoveryWalletApi": "http://localhost:8701/fcl/authn"
+  "FlowDiscoveryWalletApi": "http://localhost:8701/fcl/authn",
+  "FlowScanUrl": "https://testnet.flowscan.org/transaction/"
 }

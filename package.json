@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "export APP_ENV=stg && next dev",
+    "dev": "export APP_ENV=dev && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

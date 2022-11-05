@@ -115,7 +115,11 @@ const User: FC<UserProps> = (props) => {
             if (index === 0) {
               return (
                 <Tooltip
-                  label={`${nft.gifter}さんから受け取る`}
+                  label={
+                    props.pathAddress === props.loggedInAddress
+                      ? '受け取ってもらう'
+                      : `${nft.gifter}さんから受け取る`
+                  }
                   // bg="yellow.100"
                   // color="yellow.700"
                   placement="top-end"

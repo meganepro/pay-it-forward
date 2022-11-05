@@ -9,9 +9,12 @@ import {
   MenuList,
   MenuItem,
   Text,
+  Image,
+  HStack,
 } from '@chakra-ui/react';
 import Link from 'next/link';
 import { FC, MouseEvent } from 'react';
+import { gravatarUrl } from '@/utils/tools';
 
 export type HeaderProps = {
   loggedIn: boolean;
@@ -72,8 +75,17 @@ export const Header: FC<HeaderProps> = (props) => (
               colorScheme="yellow"
               variant="outline"
               rightIcon={<ChevronDownIcon />}
+              minW="30vw"
             >
-              {props.address}
+              <HStack>
+                <Image
+                  src={gravatarUrl(props.address)}
+                  minWidth="20px"
+                  width="20px"
+                  height="20px"
+                />
+                <Text>{props.address}</Text>
+              </HStack>
             </MenuButton>
             <MenuList backgroundColor="yellow.50">
               <Link href={`/${props.address}/info`} style={{ textDecoration: 'none' }}>

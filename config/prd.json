@@ -4,5 +4,6 @@
   "STAGE": "stg",
   "ApiDomain": "https://lkcxwhqss2.execute-api.ap-northeast-1.amazonaws.com/stg/",
   "FlowAccessNodeApi": "https://rest-mainnet.onflow.org",
-  "FlowDiscoveryWalletApi": "https://fcl-discovery.onflow.org/authn"
+  "FlowDiscoveryWalletApi": "https://fcl-discovery.onflow.org/authn",
+  "FlowScanUrl": "https://flowscan.org/transaction/"
 }

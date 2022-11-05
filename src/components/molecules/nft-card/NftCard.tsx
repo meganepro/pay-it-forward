@@ -1,13 +1,19 @@
-import { Box, Text, HStack, VStack, Heading, Center, Divider, Tooltip } from '@chakra-ui/react';
-import Image from 'next/image';
+import {
+  Box,
+  Text,
+  HStack,
+  VStack,
+  Heading,
+  Center,
+  Divider,
+  Tooltip,
+  Image,
+} from '@chakra-ui/react';
+// import Image from 'next/image';
 import Link from 'next/link';
 import React, { FC } from 'react';
+import { gravatarUrl } from '@/utils/tools';
 
-const gravatarUrl = (address: string) => {
-  const addressHash = address.slice(2) + address.slice(2);
-
-  return `https://www.gravatar.com/avatar/${addressHash}?d=identicon`;
-};
 const NftCard: FC<Nft> = (props) => {
   const { id, originalNftId, gifter, giftee, context, createdAt } = props;
 
@@ -56,7 +62,7 @@ const NftCard: FC<Nft> = (props) => {
               <Box>
                 <Link href={`/${gifter}/info`}>
                   <Box cursor="pointer">
-                    <Image src={gravatarUrl(gifter)} width="30px" height="30px" />
+                    <Image src={gravatarUrl(gifter)} minWidth="30px" width="30px" height="30px" />
                   </Box>
                 </Link>
               </Box>
@@ -67,7 +73,7 @@ const NftCard: FC<Nft> = (props) => {
                 <Box>
                   <Link href={`/${giftee}/info`}>
                     <Box cursor="pointer">
-                      <Image src={gravatarUrl(giftee)} width="30px" height="30px" />
+                      <Image src={gravatarUrl(giftee)} minWidth="30px" width="30px" height="30px" />
                     </Box>
                   </Link>
                 </Box>

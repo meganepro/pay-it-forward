@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { CheckCircleIcon } from '@chakra-ui/icons';
+import { CheckCircleIcon, ExternalLinkIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -8,11 +8,14 @@ import {
   HStack,
   Img,
   Input,
+  LinkBox,
+  LinkOverlay,
   SlideFade,
   Spacer,
   Text,
   useDisclosure,
   VStack,
+  Link,
 } from '@chakra-ui/react';
 import * as fcl from '@onflow/fcl';
 import React, { FC, MouseEvent, useEffect, useState } from 'react';
@@ -21,7 +24,7 @@ import { useTransaction } from '@/hooks/fcl/useTransaciton';
 import FclUtils from '@/utils/fcl';
 
 const simpleTransaction = `\
-import NonFungibleToken from ${process.env.ContractAddress!}
+import NonFungibleToken from ${process.env.NonFungibleTokenAddress!}
 import PayItForward from ${process.env.ContractAddress!}
 
 // user(bob)
@@ -132,7 +135,7 @@ const Receive: FC<ReceiveProps> = (props) => {
       >
         <Box p={5} shadow="md" borderWidth="1px" mb="1">
           {props.loggedInAddress !== props.pathAddress ? (
-            <HStack mb="2">
+            <HStack mb="5">
               <Box w="40vw">
                 <Text alignSelf="baseline" pl="5" mt={4}>
                   {props.pathAddress}さんからの
@@ -201,14 +204,28 @@ const Receive: FC<ReceiveProps> = (props) => {
             <>
               <Divider />
               <VStack alignItems="baseline" color="darkgray">
-                <HStack>
+                <HStack minH="7vh">
                   <Heading minW="20vw" w="20vw" fontSize="xs">
                     TRANSACTION ID
                   </Heading>
-                  <Text overflowWrap="anywhere">{transactionId}</Text>
+                  {transactionResult?.events[0]?.transactionId ? (
+                    <LinkBox>
+                      <Link
+                        href={`${process.env.FlowScanUrl}/${transactionResult?.events[0].transactionId}`}
+                        isExternal
+                      >
+                        <LinkOverlay>
+                          <Text overflowWrap="anywhere">
+                            {transactionResult?.events[0].transactionId}
+                            <ExternalLinkIcon mx="2px" />
+                          </Text>
+                        </LinkOverlay>
+                      </Link>
+                    </LinkBox>
+                  ) : null}
                 </HStack>
                 <Divider borderColor="blackAlpha.300" />
-                <HStack>
+                <HStack minH="7vh">
                   <Heading minW="20vw" w="20vw" fontSize="xs">
                     STATUS
                   </Heading>
@@ -217,7 +234,7 @@ const Receive: FC<ReceiveProps> = (props) => {
                 {transactionResult?.errorMessage ? (
                   <>
                     <Divider borderColor="blackAlpha.300" />
-                    <HStack alignItems="left">
+                    <HStack minH="7vh">
                       <Heading minW="20vw" w="20vw" fontSize="xs">
                         ERROR MESSAGE
                       </Heading>
@@ -230,7 +247,7 @@ const Receive: FC<ReceiveProps> = (props) => {
                 {transactionResult?.status === 4 && transactionResult?.statusCode === 0 ? (
                   <>
                     <Divider borderColor="blackAlpha.300" />
-                    <HStack alignItems="left">
+                    <HStack minH="7vh">
                       <Heading minW="20vw" w="20vw" fontSize="xs">
                         MESSAGE
                       </Heading>
