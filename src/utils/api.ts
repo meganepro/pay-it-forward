@@ -1,5 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import axios from 'axios';
+import { ActivityApiResult } from '@/@types/api';
 
 if (process.env.STAGE === 'dev') {
   axios.defaults.headers['Access-Control-Allow-Origin'] = '*';

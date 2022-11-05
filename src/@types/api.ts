@@ -1,10 +1,10 @@
-type ResponseFormat = {
+export type ResponseFormat = {
   statusCode: number;
   headers: { [key in string]: string };
   body: string;
 };
 
-type ActivityApiResult = {
+export type ActivityApiResult = {
   fromNftId: string;
   toNftId: string;
   fromAddress: string;
@@ -13,5 +13,3 @@ type ActivityApiResult = {
   transactionId: string;
   timestamp: string;
 };
-
-export {};
