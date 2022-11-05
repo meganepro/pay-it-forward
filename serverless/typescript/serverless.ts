@@ -1,4 +1,5 @@
 /* eslint-disable no-template-curly-in-string */
+import activity from '@functions/activity';
 import ApiSample from '@functions/api-sample';
 import monitor from '@functions/monitor';
 import type { AWS } from '@serverless/typescript';
@@ -16,11 +17,26 @@ const serverlessConfiguration: AWS = {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
       NODE_ENV: '${self:custom.stage}',
+      SERVICE: '${self:service}',
+    },
+    iam: {
+      role: {
+        statements: [
+          {
+            Effect: 'Allow',
+            Action: ['dynamodb:*'],
+            Resource: [
+              'arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:service}-${self:custom.stage}-*',
+            ],
+          },
+        ],
+      },
     },
   },
   // import the function via paths
   functions: {
     monitor,
+    activity,
     ApiSample,
   },
   package: { individually: true },
@@ -49,11 +65,11 @@ const serverlessConfiguration: AWS = {
           TableName: '${self:service}-${self:custom.stage}-activity',
           AttributeDefinitions: [
             {
-              AttributeName: 'from',
+              AttributeName: 'fromAddress',
               AttributeType: 'S',
             },
             {
-              AttributeName: 'to',
+              AttributeName: 'toAddress',
               AttributeType: 'S',
             },
             {
@@ -71,52 +87,41 @@ const serverlessConfiguration: AWS = {
           ],
           KeySchema: [
             {
-              AttributeName: 'toNftId',
+              AttributeName: 'fromAddress',
               KeyType: 'HASH',
             },
             {
-              AttributeName: 'timestamp',
-              KeyType: 'SORT',
+              AttributeName: 'toNftId',
+              KeyType: 'RANGE',
             },
           ],
           BillingMode: 'PAY_PER_REQUEST',
           GlobalSecondaryIndexes: [
             {
-              IndexName: 'from-index',
-              KeySchema: [
-                {
-                  AttributeName: 'from',
-                  KeyType: 'HASH',
-                },
-                {
-                  AttributeName: 'timestamp',
-                  KeyType: 'SORT',
-                },
-              ],
-              Projection: {
-                ProjectionType: 'INCLUDE',
-                NonKeyAttributes: ['to', 'fromNftId', 'toNftId', 'context', 'transactionId'],
-              },
-            },
-            {
               IndexName: 'to-index',
               KeySchema: [
                 {
-                  AttributeName: 'to',
+                  AttributeName: 'toAddress',
                   KeyType: 'HASH',
                 },
                 {
                   AttributeName: 'timestamp',
-                  KeyType: 'SORT',
+                  KeyType: 'RANGE',
                 },
               ],
               Projection: {
                 ProjectionType: 'INCLUDE',
-                NonKeyAttributes: ['from', 'fromNftId', 'toNftId', 'context', 'transactionId'],
+                NonKeyAttributes: [
+                  'fromAddress',
+                  'fromNftId',
+                  'toNftId',
+                  'context',
+                  'transactionId',
+                ],
               },
             },
             {
-              IndexName: 'toNftId-index',
+              IndexName: 'fromNftId-index',
               KeySchema: [
                 {
                   AttributeName: 'fromNftId',
@@ -124,12 +129,41 @@ const serverlessConfiguration: AWS = {
                 },
                 {
                   AttributeName: 'timestamp',
-                  KeyType: 'SORT',
+                  KeyType: 'RANGE',
                 },
               ],
               Projection: {
                 ProjectionType: 'INCLUDE',
-                NonKeyAttributes: ['from', 'to', 'toNftId', 'context', 'transactionId'],
+                NonKeyAttributes: [
+                  'fromAddress',
+                  'toAddress',
+                  'toNftId',
+                  'context',
+                  'transactionId',
+                ],
+              },
+            },
+            {
+              IndexName: 'toNftId-index',
+              KeySchema: [
+                {
+                  AttributeName: 'toNftId',
+                  KeyType: 'HASH',
+                },
+                {
+                  AttributeName: 'timestamp',
+                  KeyType: 'RANGE',
+                },
+              ],
+              Projection: {
+                ProjectionType: 'INCLUDE',
+                NonKeyAttributes: [
+                  'fromAddress',
+                  'toAddress',
+                  'fromNftId',
+                  'context',
+                  'transactionId',
+                ],
               },
             },
           ],

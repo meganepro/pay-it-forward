@@ -1,0 +1,9 @@
+{
+    "headers": {
+        "Content-Type": "application/json"
+    },
+    "body": "{\"name\": \"Frederic\"}",
+    "queryStringParameters": {
+        "addresses": "0xf8d6e0586b0a20c7,0x179b6b1cb6755e31"
+    }
+}

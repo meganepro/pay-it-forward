@@ -18,27 +18,10 @@ const flowConfig: FlowConfig = {
   readBlockStep: process.env.NODE_ENV === 'stg' ? 250 : process.env.NODE_ENV === 'prd' ? 250 : 1,
 };
 
-type PayItForwardPayload = {
-  fromNftId: number;
-  toNftIds: number[];
-  from: string;
-  to: string;
-  context: string;
-  timestamp: number;
-};
-type DynamoPayItForward = {
-  fromNftId: number;
-  toNftId: number;
-  from: string;
-  to: string;
-  context: string;
-  timestamp: number;
-};
-
 export const handler = async (event, context) => {
   // 読みはじめのブロック情報を取得
   const startPosition = await dynamoUtil.get({ tableName: 'key-values', key: { key: 'blockId' } });
-  if (startPosition.Item === undefined) {
+  if (!startPosition || startPosition.Item === undefined) {
     console.log('blockId is not found.');
 
     return {};
@@ -52,10 +35,16 @@ export const handler = async (event, context) => {
   // toNftIdsはばらして1レコードずつにする
   const dynamoDatas: DynamoFlowEvent<DynamoPayItForward>[] = datas
     .map((data) => {
-      const { toNftIds, ...rest } = data;
+      const { toNftIds, from, to, ...rest } = data;
 
       return toNftIds.map(
-        (toNftId) => ({ toNftId, ...rest } as DynamoFlowEvent<DynamoPayItForward>),
+        (toNftId) =>
+          ({
+            toNftId,
+            fromAddress: from,
+            toAddress: to,
+            ...rest,
+          } as DynamoFlowEvent<DynamoPayItForward>),
       ) as DynamoFlowEvent<DynamoPayItForward>[];
     })
     .flat();
