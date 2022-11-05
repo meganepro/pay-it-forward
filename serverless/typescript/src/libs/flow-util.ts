@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const getUrl = (domain: string, type: RequestType) => {
+const getUrl = (domain: string, type: FlowApiRequestType) => {
   const uri = type === 'BLOCK' ? 'blocks' : 'events';
 
   return `${domain}${uri}`;
@@ -20,6 +20,7 @@ const getEvent = async (config: FlowConfig, startHeight: number, endHeight: numb
 
     return data;
   } catch (error) {
+    console.log(error);
     console.log(`Error! code: ${error.response.status}, message: ${error.message}`);
 
     return undefined;
@@ -28,12 +29,15 @@ const getEvent = async (config: FlowConfig, startHeight: number, endHeight: numb
 
 export const getEvents = async (config: FlowConfig, startHeight: number) => {
   let isSuccess = true;
+  const initialPosition = startHeight;
+  let successCount = 0;
   let data: BlockEvent[] = [];
   while (isSuccess) {
     console.log(`start: ${startHeight} end: ${startHeight + config.readBlockStep}`);
     // eslint-disable-next-line no-await-in-loop
     const value = await getEvent(config, startHeight, startHeight + config.readBlockStep);
     if (value) {
+      successCount += 1;
       startHeight += config.readBlockStep + 1;
       data = data.concat(value);
     } else {
@@ -42,7 +46,14 @@ export const getEvents = async (config: FlowConfig, startHeight: number) => {
   }
 
   // 最後に成功した取得の開始地点を保存する
-  return { eventData: data, position: startHeight - config.readBlockStep - 1 };
+  successCount = successCount ? successCount - 1 : 0;
+
+  return {
+    eventData: data,
+    position: successCount
+      ? initialPosition + successCount * (config.readBlockStep + 1)
+      : initialPosition,
+  };
 };
 
 const parseCadenceType = (valueType: CadenceValueType): unknown => {

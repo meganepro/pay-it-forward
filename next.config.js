@@ -25,7 +25,7 @@ const nextConfig = {
     return config;
   },
   env: {
-    ...require(`./config/${process.env.APP_ENV || 'local'}.json`),
+    ...require(`./config/${process.env.APP_ENV || 'dev'}.json`),
   },
   images: {
     domains: ['www.gravatar.com'],

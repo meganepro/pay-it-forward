@@ -5,8 +5,8 @@ import CodeEditor from '@/components/molecules/editor/CodeEditor';
 import JsonViewer from '@/components/molecules/viewer/JsonViewer';
 
 const scriptTemplate = `\
-import NonFungibleToken from 0xf8d6e0586b0a20c7
-import PayItForward from 0xf8d6e0586b0a20c7
+import NonFungibleToken from ${process.env.NonFungibleTokenAddress}
+import PayItForward from ${process.env.ContractAddress}
 
 pub fun main(): {String: AnyStruct} {
 

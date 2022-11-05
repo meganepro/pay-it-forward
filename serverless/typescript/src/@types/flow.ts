@@ -1,4 +1,4 @@
-type RequestType = 'BLOCK' | 'EVENT';
+type FlowApiRequestType = 'BLOCK' | 'EVENT';
 
 type FlowConfig = {
   domain: string;

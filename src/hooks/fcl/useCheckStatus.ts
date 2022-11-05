@@ -3,12 +3,11 @@ import * as fcl from '@onflow/fcl';
 import { useCallback, useState } from 'react';
 
 const getCheckScript = (address: string) => `\
-import NonFungibleToken from ${process.env.ContractAddress!}
+import NonFungibleToken from ${process.env.NonFungibleTokenAddress!}
 import PayItForward from ${process.env.ContractAddress!}
 
 pub fun main(): {String: AnyStruct} {
 
-    // Bob: 0x179b6b1cb6755e31, Charlie: 0xf3fcd2c1a78f5eee
     let addresses: {String: Address} = {
       "user": ${address}
     }

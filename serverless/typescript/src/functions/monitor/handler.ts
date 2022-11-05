@@ -11,11 +11,11 @@ const flowConfig: FlowConfig = {
       : 'http://localhost:8888/v1/',
   contractAddress:
     process.env.NODE_ENV === 'stg'
-      ? 'A.f8d6e0586b0a20c7'
+      ? 'A.50d1f821e592d38a'
       : process.env.NODE_ENV === 'prd'
-      ? 'A.f8d6e0586b0a20c7'
+      ? ''
       : 'A.f8d6e0586b0a20c7',
-  readBlockStep: process.env.NODE_ENV === 'stg' ? 250 : process.env.NODE_ENV === 'prd' ? 250 : 1,
+  readBlockStep: process.env.NODE_ENV === 'stg' ? 249 : process.env.NODE_ENV === 'prd' ? 249 : 1,
 };
 
 export const handler = async (event, context) => {

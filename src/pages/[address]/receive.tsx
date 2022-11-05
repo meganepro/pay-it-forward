@@ -14,7 +14,7 @@ const ReceiveContainer = dynamic(
   },
 );
 
-const HomePage: NextPage = (props) => {
+const ReceivePage: NextPage = (props) => {
   const router = useRouter();
   // パスパラメータから値を取得
   let { address } = router.query;
@@ -27,4 +27,4 @@ const HomePage: NextPage = (props) => {
   );
 };
 
-export default HomePage;
+export default ReceivePage;

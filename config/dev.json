@@ -1,0 +1,8 @@
+{
+  "ContractAddress": "0xf8d6e0586b0a20c7",
+  "NonFungibleTokenAddress": "0xf8d6e0586b0a20c7",
+  "STAGE": "dev",
+  "ApiDomain": "http://localhost:3000/dev/",
+  "FlowAccessNodeApi": "http://localhost:8888",
+  "FlowDiscoveryWalletApi": "http://localhost:8701/fcl/authn"
+}

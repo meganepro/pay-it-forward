@@ -7,8 +7,8 @@ import JsonViewer from '@/components/molecules/viewer/JsonViewer';
 import { useTransaction } from '@/hooks/fcl/useTransaciton';
 
 const simpleTransaction = `\
-import NonFungibleToken from 0xf8d6e0586b0a20c7
-import PayItForward from 0xf8d6e0586b0a20c7
+import NonFungibleToken from ${process.env.NonFungibleTokenAddress}
+import PayItForward from ${process.env.ContractAddress}
 
 // user(bob)
 transaction {
