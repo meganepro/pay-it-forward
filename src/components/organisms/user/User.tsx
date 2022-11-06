@@ -2,6 +2,7 @@ import {
   Box,
   Heading,
   HStack,
+  Image,
   Img,
   SlideFade,
   Text,
@@ -12,6 +13,7 @@ import Link from 'next/link';
 import React, { FC, useEffect } from 'react';
 import NftCard from '@/components/molecules/nft-card/NftCard';
 import { useCheckStatus } from '@/hooks/fcl/useCheckStatus';
+import { gravatarUrl } from '@/utils/tools';
 
 type UserProps = {
   pathAddress?: string;
@@ -35,30 +37,47 @@ const User: FC<UserProps> = (props) => {
 
   return (
     <>
-      <SlideFade
-        in={isOpen}
-        offsetY="20px"
-        delay={1}
-        transition={{ enter: { ease: 'easeIn', duration: '1' } }}
-      >
-        <HStack>
-          <Box w="40vw">
-            <Text>
-              The quick brown fox jumps over the lazy dog is an English-language pangram—a sentence
-              that contains all of the letters of the English alphabet. Owing to its existence,
-              Chakra was created.
-            </Text>
-          </Box>
-          <Box w="3vw" />
-          <Img w="60vw" src="/images/00029.png" shadow="dark-lg" />
-        </HStack>
-      </SlideFade>
+      <HStack>
+        <Box w="40vw">
+          <Heading
+            letterSpacing="0.15em"
+            textShadow="0px 4px 4px rgba(0, 0, 0, 0.10)"
+            color="gray"
+            fontWeight="thin"
+          >
+            <HStack>
+              <Image
+                src={gravatarUrl(props.pathAddress!)}
+                minWidth="25px"
+                width="25px"
+                height="25px"
+              />
+              {props.pathAddress === props.loggedInAddress ? (
+                <Text>Your</Text>
+              ) : (
+                <Text fontSize="3xl" letterSpacing={0}>{`${props.pathAddress ?? ''}'s`}</Text>
+              )}
+              <br />
+            </HStack>
+            Record
+          </Heading>
+        </Box>
+        <Box w="3vw" />
+        <SlideFade
+          in={isOpen}
+          offsetY="20px"
+          delay={1}
+          transition={{ enter: { ease: 'easeIn', duration: '1' } }}
+        >
+          <Img w="45vw" src="/images/00029-2.png" shadow="dark-lg" />
+        </SlideFade>
+      </HStack>
       <Box h="10" />
       <SlideFade
         in={isOpen}
         offsetY="20px"
         delay={1}
-        transition={{ enter: { ease: 'easeIn', duration: '1' } }}
+        transition={{ enter: { ease: 'easeIn', duration: '2' } }}
       >
         <Box>
           <Heading alignSelf="baseline" fontSize="md" mb="3">

@@ -22,7 +22,18 @@ const NftCard: FC<Nft> = (props) => {
       <HStack alignItems="normal">
         <VStack w="10vw">
           <Heading alignSelf="baseline" fontSize="xs">
-            ID
+            Parent ID
+          </Heading>
+          <Text alignSelf="baseline" mt={4}>
+            {originalNftId}
+          </Text>
+        </VStack>
+        <Center height="auto">
+          <Divider orientation="vertical" borderColor="blackAlpha.300" ml="1" mr="1" />
+        </Center>
+        <VStack w="10vw">
+          <Heading alignSelf="baseline" fontSize="xs">
+            NFT ID
           </Heading>
           <Text alignSelf="baseline" mt={4}>
             {id}
@@ -37,17 +48,6 @@ const NftCard: FC<Nft> = (props) => {
           </Heading>
           <Text alignSelf="baseline" mt={4}>
             {new Date(parseInt(createdAt, 10) * 1000).toLocaleDateString()}
-          </Text>
-        </VStack>
-        <Center height="auto">
-          <Divider orientation="vertical" borderColor="blackAlpha.300" ml="1" mr="1" />
-        </Center>
-        <VStack w="10vw">
-          <Heading alignSelf="baseline" fontSize="xs">
-            Parent ID
-          </Heading>
-          <Text alignSelf="baseline" mt={4}>
-            {originalNftId}
           </Text>
         </VStack>
         <Center height="auto">
