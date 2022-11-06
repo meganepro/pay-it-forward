@@ -47,12 +47,13 @@ npm install -D prettier eslint-config-prettier
 npm install -D simple-git-hooks
 # amplify
 npm install aws-amplify @aws-amplify/ui-react @aws-amplify/api-graphql @aws-amplify/ui
+# graph
+npm install react-force-graph-3d three @types/three three-spritetext react-force-graph-2d faker-js @faker-js/faker
 # other
 npm install recoil react-icons \
   @onflow/fcl @onflow/types \
   @svgr/webpack
-npm install -D @faker-js/faker \
-  react-ace ace-builds 
+npm install react-ace ace-builds 
 # eslint settings
 npm init @eslint/config
 ```

@@ -1,6 +1,7 @@
 import { ExternalLinkIcon } from '@chakra-ui/icons';
 import {
   Box,
+  Center,
   Divider,
   Flex,
   Heading,
@@ -14,15 +15,56 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import React, { FC, useEffect, useState } from 'react';
+import { GraphType } from '@/@types/forceGraphTypes';
+import { Graph3D } from '@/components/atoms/Graph3D';
 import TransactionResultCard from '@/components/molecules/transaction-result/TransactionResult';
 import { getActivity } from '@/utils/api';
+import { gravatarUrl } from '@/utils/tools';
 
 type HomeProps = {
   loggedInAddress?: string;
 };
+
+const transformGraphType = (
+  transactions: Transaction[],
+): [GraphType, { [key in string]: string }] => {
+  const contextList: { [key in string]: string } = {};
+  const graph: GraphType = {
+    nodes: [
+      {
+        id: '0',
+        group: process.env.ContractAddress ?? '',
+        text: 'initial',
+        imgSrc: process.env.ContractAddress
+          ? `${gravatarUrl(process.env.ContractAddress)}?s=50`
+          : undefined,
+      },
+    ],
+    links: [],
+  };
+  transactions.forEach((tran) => {
+    graph.nodes.push({
+      id: tran.toNftId.toString(),
+      group: tran.toAddress,
+      text: tran.context,
+      imgSrc: gravatarUrl(tran.toAddress),
+    });
+    graph.links.push({
+      source: tran.fromNftId.toString(),
+      target: tran.toNftId.toString(),
+      value: 3,
+    });
+    contextList[tran.fromNftId.toString()] = tran.context;
+  });
+  console.log(graph);
+
+  return [graph, contextList];
+};
+
 const Home: FC<HomeProps> = (props) => {
   const { isOpen, onToggle } = useDisclosure();
   const [activity, setActivity] = useState<Transaction[]>([]);
+  const [graphData, setGraphData] = useState<[GraphType, { [key in string]: string }]>();
   const { loggedInAddress: address } = props;
 
   useEffect(() => {
@@ -39,7 +81,8 @@ const Home: FC<HomeProps> = (props) => {
         await getActivity([contractAddress]).then((response) => {
           console.log(response);
           if (response) {
-            setActivity(response as Transaction[]);
+            setActivity(response);
+            setGraphData(transformGraphType(response));
           }
         });
       }
@@ -110,6 +153,30 @@ const Home: FC<HomeProps> = (props) => {
         </VStack>
       </SlideFade>
       <Divider mt="3vh" mb="3vh" />
+      <Box>
+        <Heading alignSelf="baseline" fontSize="md" mb="3">
+          Recent Mint Event(Graph)
+        </Heading>
+      </Box>
+      <Center w="70vw">
+        {graphData ? (
+          <Graph3D
+            width={1000}
+            height={600}
+            graphData={graphData[0]}
+            contextList={graphData[1]}
+            linkColorBy="target"
+            linkWeightKey="value"
+            nodeLabel="group"
+            nodeColorBy="group"
+            nodeWeightKey={undefined}
+            nodeType="image"
+            showLinkText
+            linkWeightAsParticle
+          />
+        ) : null}
+      </Center>
+      <Box h="5vh" />
       <Box>
         <Heading alignSelf="baseline" fontSize="md" mb="3">
           Recent Mint Event
