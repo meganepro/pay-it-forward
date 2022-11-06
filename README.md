@@ -20,6 +20,10 @@
 
 ![alt](./architecture.drawio.png)
 
+## NFT MINT FLOW
+
+![alt](./NFTFlow.drawio.png)
+
 ## 動作環境
 
 - [STG環境(testnet)](https://d191pmcvnhlrz3.cloudfront.net/)
