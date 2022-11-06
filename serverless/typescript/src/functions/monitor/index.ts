@@ -7,7 +7,7 @@ export default {
   timeout: 300,
   events: [
     {
-      schedule: 'cron(*/10 * * * ? *)',
+      schedule: 'cron(*/2 * * * ? *)',
     },
   ],
 };

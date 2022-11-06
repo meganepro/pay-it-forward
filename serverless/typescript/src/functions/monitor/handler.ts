@@ -15,7 +15,7 @@ const flowConfig: FlowConfig = {
       : process.env.NODE_ENV === 'prd'
       ? ''
       : 'A.f8d6e0586b0a20c7',
-  readBlockStep: process.env.NODE_ENV === 'stg' ? 249 : process.env.NODE_ENV === 'prd' ? 249 : 1,
+  readBlockStep: process.env.NODE_ENV === 'stg' ? 49 : process.env.NODE_ENV === 'prd' ? 49 : 1,
 };
 
 export const handler = async (event, context) => {
