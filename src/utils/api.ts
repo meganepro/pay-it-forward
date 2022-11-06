@@ -31,3 +31,21 @@ export const getActivity = async (addresses: string[]) => {
     return undefined;
   }
 };
+export const getActivityScan = async () => {
+  console.log(process.env.STAGE);
+
+  const url = `${getActivityUrl(apiConfig)}/scan`;
+  try {
+    const res = await axios.get(url);
+    const data = res.data.result as ActivityApiResult[];
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    if (axios.isAxiosError(error) && error.response) {
+      console.log(`Error! code: ${error.response.status}, message: ${error.message}`);
+    }
+
+    return undefined;
+  }
+};

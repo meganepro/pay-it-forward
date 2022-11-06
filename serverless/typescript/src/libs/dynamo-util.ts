@@ -177,4 +177,20 @@ export const queryHashes = async <T>(props: QueryHashesProps) => {
   return results.flat();
 };
 
+type ScanProps = {
+  tableName: string;
+};
+
+export const scan = async (props: ScanProps): Promise<aws.DynamoDB.DocumentClient.ScanOutput> => {
+  const { table, client } = dynamoConfig();
+
+  try {
+    return await client.scan({ TableName: table(props.tableName) }).promise();
+  } catch (err) {
+    console.log(err);
+  }
+
+  return undefined;
+};
+
 // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#get-property

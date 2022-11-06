@@ -1,5 +1,6 @@
 /* eslint-disable no-template-curly-in-string */
 import activity from '@functions/activity';
+import activityScan from '@functions/activity-scan';
 import ApiSample from '@functions/api-sample';
 import monitor from '@functions/monitor';
 import type { AWS } from '@serverless/typescript';
@@ -37,6 +38,7 @@ const serverlessConfiguration: AWS = {
   functions: {
     monitor,
     activity,
+    activityScan,
     ApiSample,
   },
   package: { individually: true },

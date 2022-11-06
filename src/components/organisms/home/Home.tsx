@@ -18,7 +18,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { GraphType } from '@/@types/forceGraphTypes';
 import { Graph3D } from '@/components/atoms/Graph3D';
 import TransactionResultCard from '@/components/molecules/transaction-result/TransactionResult';
-import { getActivity } from '@/utils/api';
+import { getActivityScan } from '@/utils/api';
 import { gravatarUrl } from '@/utils/tools';
 
 type HomeProps = {
@@ -78,7 +78,7 @@ const Home: FC<HomeProps> = (props) => {
     const fetch = async () => {
       const contractAddress = process.env.ContractAddress;
       if (contractAddress) {
-        await getActivity([contractAddress]).then((response) => {
+        await getActivityScan().then((response) => {
           console.log(response);
           if (response) {
             setActivity(response);
