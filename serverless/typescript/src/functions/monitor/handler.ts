@@ -11,7 +11,7 @@ const flowConfig: FlowConfig = {
       : 'http://localhost:8888/v1/',
   contractAddress:
     process.env.NODE_ENV === 'stg'
-      ? 'A.50d1f821e592d38a'
+      ? 'A.cc211b65db2e5873'
       : process.env.NODE_ENV === 'prd'
       ? ''
       : 'A.f8d6e0586b0a20c7',
