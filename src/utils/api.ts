@@ -19,7 +19,7 @@ export const getActivity = async (addresses: string[]) => {
   })}`;
   try {
     const res = await axios.get(url);
-    const data = res.data as ActivityApiResult[];
+    const data = res.data.result as ActivityApiResult[];
 
     return data;
   } catch (error) {

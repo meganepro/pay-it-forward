@@ -11,5 +11,5 @@ export type ActivityApiResult = {
   toAddress: string;
   context: string;
   transactionId: string;
-  timestamp: string;
+  timestamp: number;
 };

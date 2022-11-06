@@ -6,3 +6,13 @@ type Nft = {
   context: string;
   createdAt: string;
 };
+
+type Transaction = {
+  fromAddress: string;
+  toAddress: string;
+  fromNftId: string;
+  toNftId: string;
+  context: string;
+  timestamp: number;
+  transactionId: string;
+};

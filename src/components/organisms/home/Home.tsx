@@ -7,15 +7,14 @@ import {
   HStack,
   Img,
   Link,
-  LinkBox,
-  LinkOverlay,
   SlideFade,
   Spacer,
   Text,
   useDisclosure,
   VStack,
 } from '@chakra-ui/react';
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
+import TransactionResultCard from '@/components/molecules/transaction-result/TransactionResult';
 import { getActivity } from '@/utils/api';
 
 type HomeProps = {
@@ -23,6 +22,7 @@ type HomeProps = {
 };
 const Home: FC<HomeProps> = (props) => {
   const { isOpen, onToggle } = useDisclosure();
+  const [activity, setActivity] = useState<Transaction[]>([]);
   const { loggedInAddress: address } = props;
 
   useEffect(() => {
@@ -34,14 +34,18 @@ const Home: FC<HomeProps> = (props) => {
 
   useEffect(() => {
     const fetch = async () => {
-      if (address) {
-        await getActivity([address]).then((response) => {
+      const contractAddress = process.env.ContractAddress;
+      if (contractAddress) {
+        await getActivity([contractAddress]).then((response) => {
           console.log(response);
+          if (response) {
+            setActivity(response as Transaction[]);
+          }
         });
       }
     };
     void fetch();
-  }, [address]);
+  }, []);
 
   return (
     <>
@@ -68,13 +72,13 @@ const Home: FC<HomeProps> = (props) => {
                 「ペイ・フォワード 可能の王国」
                 <br />
                 『フリー百科事典 ウィキペディア日本語版』2022年9月3日 (土) 16:37 UTC
-                <LinkBox>
-                  <Link href="https://ja.wikipedia.org/wiki/%E3%83%9A%E3%82%A4%E3%83%BB%E3%83%95%E3%82%A9%E3%83%AF%E3%83%BC%E3%83%89_%E5%8F%AF%E8%83%BD%E3%81%AE%E7%8E%8B%E5%9B%BD">
-                    <LinkOverlay>
-                      https://ja.wikipedia.org <ExternalLinkIcon mx="2px" />
-                    </LinkOverlay>
-                  </Link>
-                </LinkBox>
+                <br />
+                <Link
+                  href="https://ja.wikipedia.org/wiki/%E3%83%9A%E3%82%A4%E3%83%BB%E3%83%95%E3%82%A9%E3%83%AF%E3%83%BC%E3%83%89_%E5%8F%AF%E8%83%BD%E3%81%AE%E7%8E%8B%E5%9B%BD"
+                  isExternal
+                >
+                  https://ja.wikipedia.org <ExternalLinkIcon mx="2px" />
+                </Link>
               </Text>
             </VStack>
           </Flex>
@@ -105,8 +109,15 @@ const Home: FC<HomeProps> = (props) => {
           </Text>
         </VStack>
       </SlideFade>
-      <Box h="5vh" />
-      <Divider />
+      <Divider mt="3vh" mb="3vh" />
+      <Box>
+        <Heading alignSelf="baseline" fontSize="md" mb="3">
+          Recent Mint Event
+        </Heading>
+      </Box>
+      {activity.map((transaction) => (
+        <TransactionResultCard {...transaction} />
+      ))}
     </>
   );
 };
